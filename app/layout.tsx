@@ -23,7 +23,7 @@ export default function RootLayout({
       <body className={`${crimson.variable} antialiased`}>
         <Navbar />
         {children}
-        </body>
+      </body>
     </html>
   );
 }

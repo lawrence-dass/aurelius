@@ -4,6 +4,7 @@ import MentorCard from '@/components/MentorCard'
 import MentorList from '@/components/MentorList'
 
 import { recentSessions } from '@/constants'
+import Link from 'next/link'
 
 import { Mentor } from '@/types'
 
@@ -45,6 +46,7 @@ const Page = () => {
           ))
         }
       </section>
+      <button className='btn-primary flex justify-center items-center'><Link href="/mentors/new">Create a New Mentor</Link></button>
       <section>
         <MentorList title="Recent Mentoring Sessions" mentors={recentSessions}  />
       </section>

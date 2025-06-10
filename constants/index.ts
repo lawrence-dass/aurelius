@@ -32,7 +32,7 @@ export const recentSessions = [
     id: "1",
     practice: "dichotomy-of-control",
     mentor: "Marcus the Wise Emperor",
-    topic: "Separating What You Can and Cannot Control",
+    focus: "Separating What You Can and Cannot Control",
     duration: 25,
     color: "#FDE68A",
   },
@@ -40,7 +40,7 @@ export const recentSessions = [
     id: "2",
     practice: "virtue-ethics",
     mentor: "Sophia the Virtue Guardian",
-    topic: "Practicing Wisdom in Daily Decisions",
+    focus: "Practicing Wisdom in Daily Decisions",
     duration: 30,
     color: "#86EFAC",
   },
@@ -48,33 +48,9 @@ export const recentSessions = [
     id: "3",
     practice: "meditation",
     mentor: "Aurelius the Mindful",
-    topic: "Morning Reflection on Death and Impermanence",
+    focus: "Morning Reflection on Death and Impermanence",
     duration: 15,
     color: "#9CA3AF",
-  },
-  {
-    id: "4",
-    practice: "journaling",
-    mentor: "Seneca the Scribe",
-    topic: "Evening Review: Examining Your Actions",
-    duration: 20,
-    color: "#92C5FD",
-  },
-  {
-    id: "5",
-    practice: "negative-visualization",
-    mentor: "Epictetus the Resilient",
-    topic: "Premeditatio Malorum: Preparing for Setbacks",
-    duration: 35,
-    color: "#C7B2FD",
-  },
-  {
-    id: "6",
-    practice: "philosophical-reading",
-    mentor: "Zeno the Scholar",
-    topic: "Understanding Stoic Physics and Logic",
-    duration: 45,
-    color: "#FCA5A5",
   },
 ];
 
@@ -127,3 +103,5 @@ export const philosopherQuotes = [
     quote: "Every new thing excites anxiety. It is inevitable. The one thing that can ease it is experience.",
   },
 ];
+
+

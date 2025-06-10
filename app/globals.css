@@ -152,7 +152,7 @@ body {
   .mentor-card {
     @apply flex flex-col rounded-4xl border border-black px-4 py-4 gap-5 w-full min-lg:max-w-[410px] justify-between;
   }
-  .subject-badge {
+  .practice-badge {
     @apply bg-black text-white rounded-4xl text-sm px-2 py-1 capitalize;
   }
   .mentor-bookmark {

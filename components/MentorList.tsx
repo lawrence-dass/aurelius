@@ -10,16 +10,10 @@ import {
 
 } from '@/components/ui/table'
 import Link from 'next/link'
-import Image from 'next/image'
 
-interface Mentor {
-    id: string
-    practice: string
-    mentor: string
-    topic: string
-    duration: number
-    color: string
-}
+import { Mentor } from '@/types'
+import Image from 'next/image'
+import clock from '@/public/icons/clock.svg'
 
 import { getPracticeColor } from '@/lib/utils'
 
@@ -29,17 +23,17 @@ interface MentorListProps {
     classNames?: string
 }
 
-const MentorList = ({ title, mentors, classNames }: MentorListProps) => {
+const MentorList = ({ mentors, classNames }: MentorListProps) => {
   return (
     <article className={cn('mentor-list', classNames)}>
         <h2 className='font-bold text-3xl'> Recent Mentoring Sessions </h2>
         <Table>
             <TableHeader>
                 <TableRow>
-                    <TableHead className='text-lg w-2/3'> Mentor </TableHead>
-                    <TableHead className='text-lg'> Topic </TableHead>
-                    <TableHead className='text-lg'> Practice </TableHead>
-                    <TableHead className='text-lg'> Duration </TableHead>
+                    <TableHead className='text-xl font-bold'> Mentor </TableHead>
+                    <TableHead className='text-xl font-bold'> Focus </TableHead>
+                    <TableHead className='text-xl font-bold'> Practice </TableHead>
+                    <TableHead className='text-xl font-bold'> Duration </TableHead>
 
                 </TableRow>
             </TableHeader>
@@ -47,26 +41,29 @@ const MentorList = ({ title, mentors, classNames }: MentorListProps) => {
                 {
                     mentors.map((mentor) => (
                         <TableRow key={mentor.id}>
-                            <TableCell className='text-lg w-2/3'>
+                            <TableCell className='text-lg'>
                                 <Link href={`/mentor/${mentor.id}`}>
-                                    <div className='size-[72px] flex items-center justify-center rounded-lg max-md:hidden style={{ backgroundColor:  getBackgroundColor(mentor.practice)}}'>
-                                        <Image src={mentor.avatar} alt={mentor.name} width={40} height={40} />
                                         <p className='text-lg font-bold'> {mentor.name} </p>
-                                    </div>
                                     <div className='flex flex-col gap-2'>
                                         <p className="font-bold text-2xl"> {mentor.mentor} </p>
-                                        <p className="text-lg ">{mentor.topic}
+                                        <p className="text-lg ">{mentor.focus}
                                         </p>
                                     </div>
                                 </Link>
                             </TableCell>
                             <TableCell>
-                                <div className="subject-badge w-fit" style={{ backgroundColor: getPracticeColor(mentor.practice) }}>
+                                <div className="text-gray-700 practice-badge w-fit" style={{ backgroundColor: getPracticeColor(mentor.practice) }}>
                                     {mentor.practice}
                                 </div>
                             </TableCell>
                             <TableCell className='text-lg'> {mentor.practice} </TableCell>
-                            <TableCell className='text-lg'> {mentor.duration} </TableCell>
+                            <TableCell>
+                
+                                <div className='flex items-center gap-1' >
+                                    <p className='text-lg'>{mentor.duration}</p>
+                                <Image src={clock} alt='clock' width={20} height={20} />
+                                </div>
+                            </TableCell>
                         </TableRow>
                     ))
                 }

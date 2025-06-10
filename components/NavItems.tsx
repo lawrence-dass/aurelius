@@ -11,8 +11,8 @@ const navItems = [
         href: '/'
     },
     {
-        label: 'Mentor',
-        href: '/mentor'
+        label: 'Mentors',
+        href: '/mentors'
     },
     {
         label: 'My Journey',

@@ -22,17 +22,16 @@ export type Mentor = Models.DocumentList<Models.Document> & {
   $id: string;
   name: string;
   practice: Practice;
-  topic: string;
+  focus: string;
   duration: number;
   bookmarked: boolean;
-  philosopher?: string; // Which Stoic philosopher this mentor is based on
   virtue?: "wisdom" | "courage" | "justice" | "temperance";
 };
 
 interface CreateMentor {
   name: string;
   practice: string;
-  topic: string;
+  focus: string;
   voice: string;
   style: string; // "wise" | "conversational" | "socratic" | "formal"
   duration: number;
@@ -44,7 +43,7 @@ interface GetAllMentors {
   limit?: number;
   page?: number;
   practice?: string | string[];
-  topic?: string | string[];
+  focus?: string | string[];
   virtue?: string | string[];
   philosopher?: string;
 }
@@ -85,7 +84,7 @@ interface SavedMessage {
 interface MentorComponentProps {
   mentorId: string;
   practice: string;
-  topic: string;
+  focus: string;
   name: string;
   userName: string;
   userImage: string;

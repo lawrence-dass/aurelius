@@ -12,9 +12,11 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from './ui/textarea'
 
 import { mentorVoices, practices } from '@/constants/index'
+import { createMentor } from '@/lib/actions/mentort.actions'
+import { redirect } from 'next/navigation'
 
 const formSchema = z.object({
-    mentor: z.string().min(1, {
+    name: z.string().min(1, {
         message: "Mentor is required"
     }).max(50, {
         message: "Mentor must be less than 50 characters"
@@ -29,11 +31,6 @@ const formSchema = z.object({
     }).max(50, {
         message: "Practice must be less than 50 characters"
     }),
-    color: z.string().min(1, {
-        message: "Color is required"
-    }).max(50, {
-        message: "Color must be less than 50 characters"
-    }),
     voice: z.string().min(1, {
         message: "Voice is required"
     }).max(50, {
@@ -44,7 +41,7 @@ const formSchema = z.object({
     }).max(45, {
         message: "Duration must be less than 45 minutes"
     }),
-    voice_url: z.string().min(1, {
+    style: z.string().min(1, {
         message: "Voice URL is required"
     }).max(50, {
         message: "Voice URL must be less than 50 characters"
@@ -52,21 +49,26 @@ const formSchema = z.object({
 })
 
 const MentorForm = () => {
+
     const form = useForm<z.infer<typeof formSchema>>({
         resolver: zodResolver(formSchema),
         defaultValues: {
-            mentor: "",
+            name: "",
             focus: "",
             practice: "",
-            color: "",
             voice: "",
             duration: 15,
-            voice_url: ""
+            style: ""
         }
     })
 
-    const onSubmit = (values: z.infer<typeof formSchema>) => {
+    const onSubmit = async (values: z.infer<typeof formSchema>) => {
         console.log(values)
+        const mentor = await createMentor(values);
+        console.log('mentor', mentor);
+        if (mentor) {
+            redirect(`/mentors/${mentor.id}`);
+        }
     }
 
     return (
@@ -74,7 +76,7 @@ const MentorForm = () => {
             <form onSubmit={form.handleSubmit(onSubmit)} className='space-y-8'>
                 <FormField
                     control={form.control}
-                    name="mentor"
+                    name="name"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Mentor Name</FormLabel>
@@ -123,7 +125,7 @@ const MentorForm = () => {
                 />
                 <FormField
                     control={form.control}
-                    name="color"
+                    name="voice"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Voice</FormLabel>
@@ -148,7 +150,7 @@ const MentorForm = () => {
                 />
                 <FormField
                     control={form.control}
-                    name="voice"
+                    name="style"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Voice Style</FormLabel>
@@ -174,18 +176,6 @@ const MentorForm = () => {
                             <FormLabel>Duration</FormLabel>
                             <FormControl>
                                 <Input {...field} placeholder='Enter Duration' className='input' />
-                            </FormControl>
-                        </FormItem>
-                    )}
-                />
-                <FormField
-                    control={form.control}
-                    name="voice_url"
-                    render={({ field }) => (
-                        <FormItem>
-                            <FormLabel>Voice URL</FormLabel>
-                            <FormControl>
-                                <Input {...field} placeholder='Enter Voice URL' className='input' />
                             </FormControl>
                         </FormItem>
                     )}

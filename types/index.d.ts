@@ -36,7 +36,6 @@ interface CreateMentor {
   style: string; // "wise" | "conversational" | "socratic" | "formal"
   duration: number;
   philosopher?: string;
-  virtue?: string;
 }
 
 interface GetAllMentors {

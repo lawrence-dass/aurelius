@@ -1,4 +1,7 @@
 import type { Metadata } from "next";
+import {
+  ClerkProvider
+} from "@clerk/nextjs";
 import { Crimson_Pro } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
@@ -19,10 +22,13 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-    <html lang="en">
-      <body className={`${crimson.variable} antialiased`}>
-        <Navbar />
-        {children}
+  
+      <html lang="en">
+        <body className={`${crimson.variable} antialiased`}>
+        <ClerkProvider>
+            <Navbar />
+          {children}
+        </ClerkProvider>
       </body>
     </html>
   );

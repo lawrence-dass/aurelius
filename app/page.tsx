@@ -5,6 +5,7 @@ import MentorList from '@/components/MentorList'
 
 import { recentSessions } from '@/constants'
 import Link from 'next/link'
+import { Button } from "@/components/ui/button"
 
 import { Mentor } from '@/types'
 
@@ -46,7 +47,9 @@ const Page = () => {
           ))
         }
       </section>
-      <button className='btn-primary flex justify-center items-center'><Link href="/mentors/new">Create a New Mentor</Link></button>
+      <Button asChild className="btn-primary flex justify-center items-center">
+        <Link href="/mentors/new">Create a New Mentor</Link>
+      </Button>
       <section>
         <MentorList title="Recent Mentoring Sessions" mentors={recentSessions}  />
       </section>

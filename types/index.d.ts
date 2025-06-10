@@ -1,3 +1,4 @@
+// User type for authentication
 // type User = {
 //   name: string;
 //   email: string;
@@ -5,41 +6,47 @@
 //   accountId: string;
 // };
 
-enum Subject {
-  maths = "maths",
-  language = "language",
-  science = "science",
-  history = "history",
-  coding = "coding",
-  geography = "geography",
-  economics = "economics",
-  finance = "finance",
-  business = "business",
+enum Practice {
+  meditation = "meditation",
+  journaling = "journaling",
+  negativeVisualization = "negative-visualization",
+  virtueEthics = "virtue-ethics",
+  dichotomyOfControl = "dichotomy-of-control",
+  philosophicalReading = "philosophical-reading",
+  contemplation = "contemplation",
+  stoicPhysics = "stoic-physics",
+  stoicLogic = "stoic-logic",
 }
 
-type Companion = Models.DocumentList<Models.Document> & {
+export type Mentor = Models.DocumentList<Models.Document> & {
   $id: string;
   name: string;
-  subject: Subject;
+  practice: Practice;
   topic: string;
   duration: number;
   bookmarked: boolean;
+  philosopher?: string; // Which Stoic philosopher this mentor is based on
+  virtue?: "wisdom" | "courage" | "justice" | "temperance";
 };
 
-interface CreateCompanion {
+interface CreateMentor {
   name: string;
-  subject: string;
+  practice: string;
   topic: string;
   voice: string;
-  style: string;
+  style: string; // "wise" | "conversational" | "socratic" | "formal"
   duration: number;
+  philosopher?: string;
+  virtue?: string;
 }
 
-interface GetAllCompanions {
+interface GetAllMentors {
   limit?: number;
   page?: number;
-  subject?: string | string[];
+  practice?: string | string[];
   topic?: string | string[];
+  virtue?: string | string[];
+  philosopher?: string;
 }
 
 interface BuildClient {
@@ -52,6 +59,8 @@ interface CreateUser {
   name: string;
   image?: string;
   accountId: string;
+  philosopherTitle?: string; // e.g., "Novice Philosopher", "Practicing Stoic"
+  preferredVirtue?: string;
 }
 
 interface SearchParams {
@@ -63,21 +72,98 @@ interface Avatar {
   width: number;
   height: number;
   className?: string;
+  philosopherLevel?: "novice" | "practitioner" | "advanced" | "sage";
 }
-
 
 interface SavedMessage {
   role: "user" | "system" | "assistant";
   content: string;
+  timestamp?: Date;
+  practice?: Practice;
 }
 
-interface CompanionComponentProps {
-  companionId: string;
-  subject: string;
+interface MentorComponentProps {
+  mentorId: string;
+  practice: string;
   topic: string;
   name: string;
   userName: string;
   userImage: string;
   voice: string;
   style: string;
+  philosopher?: string;
+  virtue?: string;
+  sessionType?: "meditation" | "dialogue" | "exercise" | "reflection";
+}
+
+// Additional Stoic-specific types
+
+interface StoicSession {
+  id: string;
+  userId: string;
+  mentorId: string;
+  practice: Practice;
+  startTime: Date;
+  endTime?: Date;
+  reflections?: string;
+  virtuesPracticed: string[];
+  insightsGained?: string[];
+}
+
+interface DailyReflection {
+  id: string;
+  userId: string;
+  date: Date;
+  morningIntention?: string;
+  eveningReview?: string;
+  obstaclesEncountered?: string[];
+  virtuesEmbodied?: string[];
+  gratitude?: string[];
+}
+
+interface VirtueProgress {
+  userId: string;
+  virtue: "wisdom" | "courage" | "justice" | "temperance";
+  currentLevel: number; // 0-100
+  practiceCount: number;
+  lastPracticed: Date;
+  milestones: {
+    date: Date;
+    achievement: string;
+  }[];
+}
+
+interface PhilosophicalJournal {
+  id: string;
+  userId: string;
+  entries: {
+    date: Date;
+    prompt: string;
+    response: string;
+    mentorFeedback?: string;
+    tags: string[];
+  }[];
+}
+
+interface StoicExercise {
+  id: string;
+  name: string;
+  description: string;
+  practice: Practice;
+  difficulty: "beginner" | "intermediate" | "advanced";
+  duration: number;
+  instructions: string[];
+  targetVirtue?: string;
+}
+
+interface UserPhilosophyProfile {
+  userId: string;
+  favoritePhilosopher: string;
+  personalPhilosophy: string;
+  lifeGoals: string[];
+  currentChallenges: string[];
+  preferredPractices: Practice[];
+  wisdomLevel: number; // Overall progress score
+  totalPracticeMinutes: number;
+  streakDays: number;
 }

@@ -1,10 +1,10 @@
 import type { Metadata } from "next";
-import { Bricolage_Grotesque } from "next/font/google";
+import { Crimson_Pro } from "next/font/google";
 import "./globals.css";
 import Navbar from "@/components/Navbar";
 
-const bricolage = Bricolage_Grotesque({
-  variable: "--font-bricolage",
+const crimson = Crimson_Pro({
+  variable: "--font-crimson",
   subsets: ["latin"],
 });
 
@@ -20,7 +20,7 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
-      <body className={`${bricolage.variable} antialiased`}>
+      <body className={`${crimson.variable} antialiased`}>
         <Navbar />
         {children}
         </body>

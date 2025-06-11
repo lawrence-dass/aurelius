@@ -18,7 +18,6 @@ import clock from '@/public/icons/clock.svg'
 import { getPracticeColor } from '@/lib/utils'
 
 interface MentorListProps {
-    title: string
     mentors: Mentor[]
     classNames?: string
 }

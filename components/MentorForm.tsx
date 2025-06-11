@@ -12,7 +12,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '.
 import { Textarea } from './ui/textarea'
 
 import { mentorVoices, practices } from '@/constants/index'
-import { createMentor } from '@/lib/actions/mentort.actions'
+import { createMentor } from '@/lib/actions/mentor.actions'
 import { redirect } from 'next/navigation'
 
 const formSchema = z.object({
@@ -63,10 +63,9 @@ const MentorForm = () => {
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log(values)
         const mentor = await createMentor(values);
-        console.log('mentor', mentor);
-        if (mentor) {
+        console.log('mento 1111', mentor);
+        if (mentor?.id) {
             redirect(`/mentors/${mentor.id}`);
         }
     }

@@ -43,8 +43,6 @@ interface GetAllMentors {
   page?: number;
   practice?: string | string[];
   focus?: string | string[];
-  virtue?: string | string[];
-  philosopher?: string;
 }
 
 interface BuildClient {

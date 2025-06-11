@@ -23,7 +23,7 @@ export const mentorVoices = {
   },
   female: { 
     wise: "ZIlrSGI4jZqobxRKprJz", 
-    conversational: "sarah" 
+    conversational: "c6SfcYrb2t09NHXiT80T"
   },
 };
 

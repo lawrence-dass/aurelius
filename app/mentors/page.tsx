@@ -1,23 +1,31 @@
-'use client'
+import {getAllMentors} from "@/lib/actions/mentor.actions";
+import MentorCard from "@/components/MentorCard";
+import { SearchParams } from "@/types";
+import PracticeFilter from "@/components/PracticeFilter";
+import SearchInput from "@/components/SearchInput";
 
-import React from 'react'
-import { getMentors } from '@/lib/actions/mentor.actions'
-import { SearchParams } from 'next/dist/server/request/search-params'
-import MentorList from '@/components/MentorList';
+const MentorsLibrary = async ({ searchParams }: SearchParams) => {
+    const filters = await searchParams;
+    const practice = filters.practice ? filters.practice : '';
+    const focus = filters.focus ? filters.focus : '';
+    const mentors = await getAllMentors({ practice, focus });
 
-const page = async ({ searchParams }: SearchParams ) => {
-  const filters = await searchParams;
-  const practice = typeof filters === "string" ? filters : Array.isArray(filters) ? filters[0] : undefined;
-  const focus = typeof filters === "string" ? filters : Array.isArray(filters) ? filters[1] : undefined;
-  const mentors = await getMentors({ practice, focus });
-  return (
-    <div>
-      <h1>Mentors</h1> 
-      <p>Practice: {practice}</p>
-      <p>Focus: {focus}</p>
-      <MentorList mentors={mentors} />
-    </div>
-  )
+    return (
+        <main>
+            <section className="flex justify-between gap-4 max-sm:flex-col">
+                <h1>Mentor Library</h1>
+                <div className="flex gap-4">
+                    <SearchInput />
+                    <PracticeFilter />
+                </div>
+            </section>
+            <section className="mentors-grid">
+                  {mentors.map((mentor) => (
+                    <MentorCard key={mentor.id} {...mentor} />
+                ))}
+            </section>
+        </main>
+    )
 }
 
-export default page
+export default MentorsLibrary

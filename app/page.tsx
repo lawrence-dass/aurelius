@@ -51,10 +51,16 @@ const Page = () => {
         <Link href="/mentors/new">Create a New Mentor</Link>
       </Button>
       <section>
-        <MentorList title="Recent Mentoring Sessions" mentors={recentSessions}  />
+        <MentorList mentors={recentSessions}  />
       </section>
     </main>
   )
 }
 
 export default Page
+
+
+// TODO:
+// - [ ] fix subscription issue
+// - [ ] check the mentor privacy concern
+// - [ ] fix the mentor voice issue and mentor id issue

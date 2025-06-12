@@ -15,7 +15,6 @@ import { Mentor } from '@/types'
 import Image from 'next/image'
 import clock from '@/public/icons/clock.svg'
 
-import { getPracticeColor } from '@/lib/utils'
 
 interface MentorListProps {
     mentors: Mentor[]
@@ -23,6 +22,7 @@ interface MentorListProps {
 }
 
 const MentorList = ({ mentors, classNames }: MentorListProps) => {
+    
   return (
     <article className={cn('mentor-list', classNames)}>
         <h2 className='font-bold text-3xl'> Recent Mentoring Sessions </h2>
@@ -37,29 +37,29 @@ const MentorList = ({ mentors, classNames }: MentorListProps) => {
                 </TableRow>
             </TableHeader>
             <TableBody>
-                {
+                { mentors && mentors.length > 0 &&
                     mentors.map((mentor) => (
-                        <TableRow key={mentor.id}>
+                        <TableRow key={mentor?.id}>
                             <TableCell className='text-lg'>
-                                <Link href={`/mentor/${mentor.id}`}>
-                                        <p className='text-lg font-bold'> {mentor.name} </p>
+                                <Link href={`/mentors/${mentor?.id}`}>
+                                        <p className='text-lg font-bold'> {mentor?.name} </p>
                                     <div className='flex flex-col gap-2'>
-                                        <p className="font-bold text-2xl"> {mentor.mentor} </p>
-                                        <p className="text-lg ">{mentor.focus}
+                                        <p className="font-bold text-2xl"> {mentor?.mentor} </p>
+                                        <p className="text-lg ">{mentor?.focus}
                                         </p>
                                     </div>
                                 </Link>
                             </TableCell>
                             <TableCell>
-                                <div className="text-gray-700 practice-badge w-fit" style={{ backgroundColor: getPracticeColor(mentor.practice) }}>
-                                    {mentor.practice}
+                                <div className="text-gray-700 practice-badge w-fit">
+                                    {mentor?.practice}
                                 </div>
                             </TableCell>
-                            <TableCell className='text-lg'> {mentor.practice} </TableCell>
+                            <TableCell className='text-lg'> {mentor?.practice} </TableCell>
                             <TableCell>
                 
                                 <div className='flex items-center gap-1' >
-                                    <p className='text-lg'>{mentor.duration}</p>
+                                    <p className='text-lg'>{mentor?.duration}</p>
                                 <Image src={clock} alt='clock' width={20} height={20} />
                                 </div>
                             </TableCell>

@@ -3,7 +3,7 @@
 import {auth} from "@clerk/nextjs/server";
 import {createSupabaseClient} from "@/lib/supabase";
 import { revalidatePath } from "next/cache";
-import { CreateMentor, GetAllMentors } from "@/types";
+import { CreateMentor, GetMentors } from "@/types";
 
 
 export const createMentor = async (formData: CreateMentor) => {
@@ -20,7 +20,7 @@ export const createMentor = async (formData: CreateMentor) => {
     return data[0];
 }
 
-export const getAllMentors = async ({ limit = 10, page = 1, practice, focus }: GetAllMentors) => {
+export const getMentors = async ({ limit = 10, page = 1, practice, focus }: GetMentors) => {
     const supabase = createSupabaseClient();
 
     let query = supabase.from('mentors').select();
@@ -79,8 +79,7 @@ export const getRecentSessions = async (limit = 10) => {
         .limit(limit)
 
     if(error) throw new Error(error.message);
-
-    return data.map(({ mentors }) => mentors);
+    return data.map(({ mentors }) => mentors).filter((mentor) => mentor);
 }
 
 export const getUserSessions = async (userId: string, limit = 10) => {

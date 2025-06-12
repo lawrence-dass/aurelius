@@ -19,7 +19,7 @@ enum Practice {
 }
 
 export type Mentor = Models.DocumentList<Models.Document> & {
-  $id: string;
+  id: string;
   name: string;
   practice: Practice;
   focus: string;
@@ -38,7 +38,7 @@ interface CreateMentor {
   philosopher?: string;
 }
 
-interface GetAllMentors {
+interface GetMentors {
   limit?: number;
   page?: number;
   practice?: string | string[];

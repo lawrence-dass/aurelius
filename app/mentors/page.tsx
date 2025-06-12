@@ -1,4 +1,4 @@
-import {getAllMentors} from "@/lib/actions/mentor.actions";
+import {getMentors} from "@/lib/actions/mentor.actions";
 import MentorCard from "@/components/MentorCard";
 import { SearchParams } from "@/types";
 import PracticeFilter from "@/components/PracticeFilter";
@@ -8,7 +8,7 @@ const MentorsLibrary = async ({ searchParams }: SearchParams) => {
     const filters = await searchParams;
     const practice = filters.practice ? filters.practice : '';
     const focus = filters.focus ? filters.focus : '';
-    const mentors = await getAllMentors({ practice, focus });
+    const mentors = await getMentors({ practice, focus });
 
     return (
         <main>

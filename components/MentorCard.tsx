@@ -24,7 +24,7 @@ const MentorCard = ({ id, name, focus, practice, duration, color }: Mentor) => {
             <Image src={clock} alt='clock' width={20} height={20} />
             <p className='text-md text-gray-500'>{duration} minutes </p>
         </div>
-        <Link href={`/mentor/${id}`} className='w-full'>
+        <Link href={`/mentors/${id}`} className='w-full'>
         <button className='btn-primary w-full justify-center'>
             Launch Session
         </button>

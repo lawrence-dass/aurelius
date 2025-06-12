@@ -26,11 +26,19 @@ interface MentorCompontentProps {
     voice: string;
 }
 
-const MentorCompontent = ({ mentorId, practice, focus, name, userName, userImage, style, voice }: MentorCompontentProps) => {
+interface Message {
+    role: "user" | "system" | "assistant";
+    content: string;
+    type?: string;
+    transcriptType?: string;
+    transcript?: string;
+}
+
+const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, voice }: MentorCompontentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
-    const [messages, setMessages] = useState<SavedMessage[]>([]);
+    const [messages, setMessages] = useState<Message[]>([]);
 
     const lottieRef = useRef<LottieRefCurrentProps>(null);
 
@@ -54,7 +62,7 @@ const MentorCompontent = ({ mentorId, practice, focus, name, userName, userImage
 
         const onMessage = (message: Message) => {
             if(message.type === 'transcript' && message.transcriptType === 'final') {
-                const newMessage= { role: message.role, content: message.transcript}
+                const newMessage = { role: message.role, content: message.transcript ?? "" }
                 setMessages((prev) => [newMessage, ...prev])
             }
         }

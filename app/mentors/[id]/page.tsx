@@ -43,7 +43,7 @@ const page = async ({params}: MentorSessionPageProps) => {
           </div>
         </div>
         </article>
-        <MentorCompontent />
+        <MentorCompontent {...mentor} />
     </main>
   )
 }

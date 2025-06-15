@@ -43,9 +43,9 @@ const PracticeFilter = () => {
             </SelectTrigger>
             <SelectContent>
                 <SelectItem value="all">All practices</SelectItem>
-                {practices.map((practice) => (
+                {Object.keys(practices).map((practice) => (
                     <SelectItem key={practice} value={practice} className="capitalize">
-                        {practice}
+                        {practices[practice as keyof typeof practices] as string}
                     </SelectItem>
                 ))}
             </SelectContent>

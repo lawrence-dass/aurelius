@@ -1,11 +1,35 @@
-export const practices = [
-  "meditation",
-  "journaling",
-  "negative-visualization",
-  "virtue-ethics",
-  "dichotomy-of-control",
-  "philosophical-reading",
-];
+export const practices = {
+  // Core Practices
+  "meditation": "Meditation",
+  "journaling": "Journaling",
+  
+  // Visualization Exercises
+  "negative-visualization": "Negative Visualization",
+  "view-from-above": "View from Above",
+  
+  // Daily Reflections
+  "morning-reflection": "Morning Reflection",
+  "evening-review": "Evening Review",
+  
+  // Study & Contemplation
+  "philosophical-reading": "Philosophical Reading",
+  "contemplation": "Contemplation",
+  
+  // Stoic Exercises
+  "dichotomy-exercise": "Dichotomy Exercise",
+  "virtue-tracking": "Virtue Tracking",
+  
+  // Advanced Practices
+  "death-meditation": "Death Meditation (Memento Mori)",
+  "objective-description": "Objective Description",
+  
+  // Discipline Training
+  "prosoche": "Prosoche (Mindful Attention)",
+  "ethical-review": "Ethical Review",
+  
+  // Character Building
+  "discipline-training": "Discipline Training"
+};
 
 export const practiceColors = {
   meditation: "#9CA3AF",
@@ -25,6 +49,54 @@ export const mentorVoices = {
     wise: "ZIlrSGI4jZqobxRKprJz", 
     conversational: "c6SfcYrb2t09NHXiT80T"
   },
+};
+
+export const specialties = {
+  // Core Stoic Concepts
+  "dichotomy-of-control": "Dichotomy of Control",
+  "virtue-ethics": "Virtue Ethics",
+  
+  // Emotional Mastery
+  "dealing-with-anger": "Dealing with Anger",
+  "managing-anxiety": "Managing Anxiety",
+  
+  // Life Challenges
+  "facing-adversity": "Facing Adversity",
+  "accepting-fate": "Accepting Fate (Amor Fati)",
+  
+  // Relationships & Society
+  "dealing-with-difficult-people": "Dealing with Difficult People",
+  "social-duty": "Social Duty & Justice",
+  
+  // Professional Life
+  "leadership-under-pressure": "Leadership Under Pressure",
+  "ethical-business": "Ethical Business Practices",
+  
+  // Daily Practice
+  "morning-reflection": "Morning Reflection",
+  "negative-visualization": "Negative Visualization",
+  
+  // Personal Development
+  "building-resilience": "Building Resilience",
+  "cultivating-wisdom": "Cultivating Wisdom",
+  
+  // Life Situations
+  "facing-mortality": "Facing Mortality",
+  "handling-success": "Handling Success",
+  
+  // Mental Training
+  "attention-training": "Attention Training",
+  "impulse-control": "Impulse Control",
+  
+  // Advanced Topics
+  "living-according-to-nature": "Living According to Nature",
+  "philosophy-as-therapy": "Philosophy as Therapy"
+};
+export const virtues = {
+  wisdom: "Wisdom",
+  courage: "Courage",
+  justice: "Justice",
+  temperance: "Temperance",
 };
 
 export const recentSessions = [

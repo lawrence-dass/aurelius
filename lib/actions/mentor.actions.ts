@@ -20,18 +20,18 @@ export const createMentor = async (formData: CreateMentor) => {
     return data[0];
 }
 
-export const getMentors = async ({ limit = 10, page = 1, practice, focus }: GetMentors) => {
+export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetMentors) => {
     const supabase = createSupabaseClient();
 
     let query = supabase.from('mentors').select();
 
-    if(practice && focus) {
-        query = query.ilike('practice', `%${practice}%`)
-            .or(`focus.ilike.%${focus}%,name.ilike.%${focus}%`)
-    } else if(practice) {
-        query = query.ilike('practice', `%${practice}%`)
-    } else if(focus) {
-        query = query.or(`focus.ilike.%${focus}%,name.ilike.%${focus}%`)
+    if(practices && name) {
+        query = query.ilike('practice', `%${practices}%`)
+            .or(`name.ilike.%${name}%`)
+    } else if(practices) {
+        query = query.ilike('practice', `%${practices}%`)
+    } else if(name) {
+        query = query.or(`name.ilike.%${name}%`)
     }
 
     query = query.range((page - 1) * limit, page * limit - 1);

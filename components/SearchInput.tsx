@@ -20,7 +20,7 @@ const SearchInput = () => {
       if(search) {
         const newUrl = formUrlQuery({
           params: searchParams.toString(),
-          key: 'focus',
+          key: 'name',
           value: search,
         })
         router.push(newUrl, { scroll: false });
@@ -29,7 +29,7 @@ const SearchInput = () => {
         if(pathname.includes('mentors')) {
           const newUrl = removeKeysFromUrlQuery({
             params: searchParams.toString(),
-            keysToRemove: ['focus'],
+            keysToRemove: ['name'],
           })
           router.push(newUrl, { scroll: false });
         }
@@ -39,11 +39,11 @@ const SearchInput = () => {
   }, [search, router, pathname, searchParams]);
 
   return (
-    <div className='relative border border-black rounded-lg items-center flex gap-2 px-2 py-1 h-fit'>
-      <Image src="/icons/search.svg" alt="search" width={16} height={16} />
+    <div className='relative rounded-lg items-center flex gap-2 px-2 h-fit'>
+      <Image src="/icons/search.svg" alt="search" width={14} height={14} />
       <Input
         type="text"
-        className='bg-transparent outline-none'
+        className='bg-transparent outline-none text-sm  border-black'
         placeholder="Search"
         value={search}
         onChange={(e) => setSearch(e.target.value)}

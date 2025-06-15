@@ -6,9 +6,9 @@ import SearchInput from "@/components/SearchInput";
 
 const MentorsLibrary = async ({ searchParams }: SearchParams) => {
     const filters = await searchParams;
-    const practice = filters.practice ? filters.practice : '';
-    const focus = filters.focus ? filters.focus : '';
-    const mentors = await getMentors({ practice, focus });
+    const practices = filters.practice ? filters.practice : '';
+    const name = filters.name ? filters.name : '';
+    const mentors = await getMentors({ practices, name });
 
     return (
         <main>

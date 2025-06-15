@@ -12,44 +12,11 @@ interface MentorSessionPageProps {
   }>
 }
 
-const currentMentor = {
-  id: "marcus-aurelius-001",
-  name: "Marcus Aurelius",
-  title: "The Philosopher Emperor",
-  famousQuote: "You have power over your mind - not outside events. Realize this, and you will find strength.",
-  introduction: "I am Marcus Aurelius, Roman Emperor from 161 to 180 AD. Born into privilege, I found my true wealth in philosophy. While leading the empire through war and plague, I wrote my 'Meditations' - private reflections never meant for publication. I believe in seeing obstacles as opportunities, maintaining perspective through cosmic awareness, and fulfilling one's duty without complaint. My strength lies in blending power with humility, action with reflection. Let me guide you through the art of maintaining inner peace while managing life's responsibilities.",
-  qualities: [
-    "reflective",
-    "humble",
-    "dutiful",
-    "contemplative",
-    "resilient"
-  ],
-  primaryVirtue: "wisdom",
-  secondaryVirtues: ["justice", "temperance"],
-  duration: 3,
-  practices: [
-    "meditation",
-    "journaling",
-    "contemplation",
-    "morning-reflection"
-  ],
-  specialties: [
-    "dealing-with-adversity",
-    "leadership-under-pressure",
-    "finding-inner-peace",
-    "accepting-fate"
-  ],
-  mentorType: "default",
-  style: "classical",
-  voice: "male"
-}
 
 const page = async ({ params }: MentorSessionPageProps) => {
   console.log('params', params)
-  // const {id} = await params  
-  // const mentor = await getMentor(id)
-  const mentor = currentMentor
+  const {id} = await params  
+  const mentor = await getMentor(id)
   const user = await currentUser();
   console.log('user', user)
   if (!user) redirect('/sign-in')

@@ -17,7 +17,12 @@ enum CallStatus {
 
 interface MentorCompontentProps {
     mentorId: string;
-    practice: string;
+    secondary_virtues: string[];
+    practices: string[];
+    specialties: string[];
+    duration: number;
+    introduction: string;
+    primary_virtue: string;
     name: string;
     userName: string | null;
     userImage: string | null;
@@ -33,7 +38,7 @@ interface Message {
     transcript?: string;
 }
 
-const MentorCompontent = ({ mentorId, practice, name, userName, userImage, style, voice }: MentorCompontentProps) => {
+const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties, introduction, primary_virtue, name, userName, userImage, style, voice }: MentorCompontentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -86,7 +91,7 @@ const MentorCompontent = ({ mentorId, practice, name, userName, userImage, style
             vapi.off('speech-start', onSpeechStart);
             vapi.off('speech-end', onSpeechEnd);
         }
-    }, []);
+    }, [mentorId]);
 
     const toggleMicrophone = () => {
         const isMuted = vapi.isMuted();
@@ -98,7 +103,7 @@ const MentorCompontent = ({ mentorId, practice, name, userName, userImage, style
         setCallStatus(CallStatus.CONNECTING)
 
         const assistantOverrides = {
-            variableValues: { practice, name, style },
+            variableValues: { secondary_virtues, practices, specialties, introduction, primary_virtue, name, style, voice },
             clientMessages: ["transcript"],
             serverMessages: [],
         }

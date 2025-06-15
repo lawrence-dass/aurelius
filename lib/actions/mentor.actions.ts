@@ -23,13 +23,13 @@ export const createMentor = async (formData: CreateMentor) => {
 export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetMentors) => {
     const supabase = createSupabaseClient();
 
-    let query = supabase.from('mentors').select();
+    let query = supabase.from('mentors').select().filter('mentor_type', 'eq', 'default');
 
     if(practices && name) {
-        query = query.ilike('practice', `%${practices}%`)
+        query = query.ilike('practices', `%${practices}%`)
             .or(`name.ilike.%${name}%`)
     } else if(practices) {
-        query = query.ilike('practice', `%${practices}%`)
+        query = query.ilike('practices', `%${practices}%`)
     } else if(name) {
         query = query.or(`name.ilike.%${name}%`)
     }

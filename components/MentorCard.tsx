@@ -7,12 +7,12 @@ import Link from 'next/link'
 
 import { Mentor } from '@/types'
 
-const MentorCard = ({ id, name, title, famousQuote, primaryVirtue, duration, practices, specialties }: Mentor) => {
+const MentorCard = ({ id, name, title, famous_quote, primary_virtue, duration, practices, specialties }: Mentor) => {
   return (
     <article className="mentor-card">
         <div className='flex justify-between items-center'>
             <div className="virtue-badge">
-                {primaryVirtue}
+                {primary_virtue}
             </div>
             <button className='mentor-bookmark'>
                 <Image src={bookmark} alt='bookmark' width={14} height={14} />
@@ -21,7 +21,7 @@ const MentorCard = ({ id, name, title, famousQuote, primaryVirtue, duration, pra
         <h2 className='text-4xl font-bold text-center' >{name}</h2>
         <h3 className='text-lg font-bold text-center'>{title}</h3>
         <div className='flex items-center gap-2'>
-            <p className='text-md italic text-gray-900 text-center'>{famousQuote}</p>
+            <p className='text-md italic text-gray-900 text-center'>{famous_quote}</p>
         </div>
         <p className='text-lg font-bold text-center mt-4'>Practices</p>
         <div className='flex justify-evenly items-center gap-2 flex-wrap '>

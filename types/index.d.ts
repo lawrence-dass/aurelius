@@ -23,16 +23,17 @@ export type Mentor = Models.DocumentList<Models.Document> & {
   id: string;
   name: string;
   title: string;
-  famousQuote: string;
+  famous_quote: string;
   qualities: string[];
-  primaryVirtue: string;
-  secondaryVirtues: string[];
+  primary_virtue: string;
+  secondary_virtues: string[];
   duration: number;
   practices: string[];
   specialties: string[];  
-  mentorType: "default" | "custom";
+  mentor_type: "default" | "custom";
   style: string;
   voice: string;
+  introduction: string;
 };
 
 interface CreateMentor {

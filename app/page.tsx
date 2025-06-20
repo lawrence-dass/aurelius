@@ -10,7 +10,6 @@ import { Button } from "@/components/ui/button"
 
 const Page = async () => {
   const mentors = await getMentors({ limit: 3});
-  console.log('mentors', mentors)
   
   const recentSessions = await getRecentSessions(3);
 
@@ -35,12 +34,3 @@ const Page = async () => {
 }
 
 export default Page
-
-
-// TODO:
-// - [ ] fix subscription issue
-// - [ ] check the mentor privacy concern
-// - [ ] fix the mentor voice issue and mentor id issue
-// - [ ] remove feild base on the testing and use case
-// - [ ] fix the getMentors and display them in
-// - [ ] fix the bookmark on the dashboard

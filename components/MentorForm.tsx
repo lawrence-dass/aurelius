@@ -94,13 +94,13 @@ const MentorForm = () => {
     })
 
     const onSubmit = async (values: z.infer<typeof formSchema>) => {
-        console.log('values', values);
+
 
         const newValues = {
             ...values,
             mentorType: "custom" as "custom" | "default"
         }
-        console.log('newValues', newValues);
+        
         const mentor = await createMentor(newValues);
         if (mentor?.id) {
             redirect(`/mentors/${mentor.id}`);

@@ -14,11 +14,9 @@ interface MentorSessionPageProps {
 
 
 const page = async ({ params }: MentorSessionPageProps) => {
-  console.log('params', params)
   const {id} = await params  
   const mentor = await getMentor(id)
   const user = await currentUser();
-  console.log('user', user)
   if (!user) redirect('/sign-in')
   if (!mentor) redirect('/mentors')
   return (

@@ -21,7 +21,7 @@ const PracticeFilter = () => {
 
     useEffect(() => {
         let newUrl = "";
-        if (practice === "all") {
+        if (practice === "") {
             newUrl = removeKeysFromUrlQuery({
                 params: searchParams.toString(),
                 keysToRemove: ["practice"],
@@ -34,7 +34,7 @@ const PracticeFilter = () => {
             });
         }
         router.push(newUrl, { scroll: false });
-    }, [practice]);
+    }, [practice, router, searchParams]);
 
     return (
         <Select onValueChange={setPractice} value={practice}>

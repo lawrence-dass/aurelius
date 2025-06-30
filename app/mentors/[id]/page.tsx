@@ -33,7 +33,7 @@ const page = async ({ params }: MentorSessionPageProps) => {
             <p className='text-lg font-bold text-gray-500 text-center'>{mentor.duration} minutes </p>
           </div>
       </article>
-      <MentorCompontent userName={user.firstName} userImage={user.imageUrl} {...mentor} />
+      <MentorCompontent mentorId={id} userName={user.firstName} userImage={user.imageUrl} {...mentor} />
     </main>
   )
 }

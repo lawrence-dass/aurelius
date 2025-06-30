@@ -43,8 +43,41 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
-
+    const [timeRemaining, setTimeRemaining] = useState(60); // 1 minute default
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const lottieRef = useRef<LottieRefCurrentProps>(null);
+    const elapsedTime = useRef(0);
+    const timeRemainingRef = useRef(timeRemaining);
+
+    // Timer effect
+    useEffect(() => {
+        if (callStatus === CallStatus.ACTIVE) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            timerRef.current = setInterval(() => {
+                setTimeRemaining((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(timerRef.current!);
+                        setCallStatus(CallStatus.FINISHED);
+                        vapi.stop();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        } else {
+            if (timerRef.current) clearInterval(timerRef.current);
+        }
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [callStatus]);
+
+    // Reset timer when session starts
+    useEffect(() => {
+        if (callStatus === CallStatus.CONNECTING) {
+            setTimeRemaining(60);
+        }
+    }, [callStatus]);
 
     useEffect(() => {
         if(lottieRef) {
@@ -61,7 +94,8 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
 
         const onCallEnd = () => {
             setCallStatus(CallStatus.FINISHED);
-            addToSessionHistory(mentorId)
+            elapsedTime.current = 60 - timeRemainingRef.current;
+            addToSessionHistory(mentorId, elapsedTime.current);
         }
 
         const onMessage = (message: Message) => {
@@ -92,6 +126,10 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
             vapi.off('speech-end', onSpeechEnd);
         }
     }, [mentorId]);
+
+    useEffect(() => {
+        timeRemainingRef.current = timeRemaining;
+    }, [timeRemaining]);
 
     const toggleMicrophone = () => {
         const isMuted = vapi.isMuted();
@@ -140,6 +178,8 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
                         </div>
                     </div>
                     <p className="font-bold text-2xl">{name}</p>
+                    <div> Time Remaining: {timeRemaining} seconds</div>
+
                 </div>
 
                 <div className="flex gap-4 justify-center items-center w-70">

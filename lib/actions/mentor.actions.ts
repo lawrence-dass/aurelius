@@ -56,13 +56,15 @@ export const getMentor = async (id: string) => {
     return data[0];
 }
 
-export const addToSessionHistory = async (mentorId: string) => {
+export const addToSessionHistory = async (mentorId: string, lapsedTime: number) => {
     const { userId } = await auth();
     const supabase = createSupabaseClient();
+
     const { data, error } = await supabase.from('session_history')
         .insert({
             mentor_id: mentorId,
             user_id: userId,
+            user_call_usage: lapsedTime,
         })
 
     if(error) throw new Error(error.message);
@@ -70,16 +72,29 @@ export const addToSessionHistory = async (mentorId: string) => {
     return data;
 }
 
-export const getRecentSessions = async (limit = 10) => {
+export const getRecentSessions = async (userId: string, limit = 10) => {
     const supabase = createSupabaseClient();
     const { data, error } = await supabase
         .from('session_history')
-        .select(`mentors:mentor_id (*)`)
+        .select(`
+            *,
+            mentors:mentor_id (*)
+        `)
+        .eq('user_id', userId)
         .order('created_at', { ascending: false })
         .limit(limit)
 
     if(error) throw new Error(error.message);
-    return data.map(({ mentors }) => mentors).filter((mentor) => mentor);
+    const sessionInfo = data.map((session) => ({
+        id: session.id,
+        created_at: session.created_at,
+        mentor_id: session.mentor_id,
+        user_call_usage: session.user_call_usage,
+        mentor_name: session.mentors.name,
+        mentor_practices: session.mentors.practices,    
+        mentor_specialties: session.mentors.specialties
+    }));
+    return sessionInfo;
 }
 
 export const getUserSessions = async (userId: string, limit = 10) => {
@@ -109,34 +124,29 @@ export const getUserMentors = async (userId: string) => {
 }
 
 export const newMentorPermissions = async () => {
-    const { userId, has } = await auth();
-    const supabase = createSupabaseClient();
-
-    let limit = 0;
+    const { has  } = await auth();
+    // const supabase = createSupabaseClient();
 
     if(has({ plan: 'pro' })) {
         return true;
-    } else if(has({ feature: "3_mentor_limit" })) {
-        limit = 3;
-    } else if(has({ feature: "10_mentor_limit" })) {
-        limit = 10;
     }
+    return false;
 
-    const { data, error } = await supabase
-        .from('mentors')
-        .select('id', { count: 'exact' })
-        .eq('author', userId)
+    // // removed multi level subscription
+    // const { data, error } = await supabase
+    //     .from('mentors')
+    //     .select('id', { count: 'exact' })
+    //     .eq('author', userId)
 
-    if(error) throw new Error(error.message);
+    // if(error) throw new Error(error.message);
 
-    const mentorCount = data?.length;
-    return true;
-    if(mentorCount >= limit) {
-        return false
-    } else {
-        return true;
-    }
+    // const mentorCount = data?.length;
 
+    // if(mentorCount >= limit) {
+    //     return false
+    // } else {
+    //     return true;
+    // }
 }
 
 // Bookmarks

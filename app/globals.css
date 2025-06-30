@@ -42,7 +42,7 @@ html {
   --sidebar-accent-foreground: oklch(0.205 0 0);
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
-  --background: oklch(1 0 0);
+  --background: oklch(1 0 0)
   --foreground: oklch(0.145 0 0);
 }
 
@@ -135,7 +135,7 @@ body {
     @apply bg-background text-foreground;
   }
   main {
-    @apply mx-auto px-14 flex flex-col gap-8 bg-background h-full max-w-[1400px] pt-10 max-sm:px-2;
+    @apply mx-auto px-12 flex flex-col gap-4 bg-background h-full max-w-[1400px] pt-10 max-sm:px-2;
   }
   h1 {
     @apply text-3xl font-bold;
@@ -144,16 +144,16 @@ body {
 
 @layer components {
   .home-section {
-    @apply flex gap-4 justify-between items-start w-full max-lg:flex-col-reverse max-lg:items-center;
+    @apply flex gap-2 justify-between items-start w-full max-lg:flex-col-reverse max-lg:items-center;
   }
   .mentors-grid {
-    @apply flex flex-wrap gap-4 w-full max-md:justify-center;
+    @apply flex justify-between flex-wrap gap-4 w-full max-md:justify-center;
   }
   .mentor-card {
-    @apply flex flex-col rounded-4xl border border-black px-4 py-4 gap-5 w-full min-lg:max-w-[410px] justify-between;
+    @apply flex flex-col rounded-2xl border border-black px-4 py-4 gap-5 w-full min-lg:max-w-[410px] justify-between;
   }
-  .practice-badge {
-    @apply bg-black text-white rounded-4xl text-sm px-2 py-1 capitalize;
+  .virtue-badge {
+    @apply bg-gray-700 text-white rounded-4xl text-sm px-2 py-1 capitalize;
   }
   .mentor-bookmark {
     @apply px-2 bg-black rounded-4xl flex items-center h-full aspect-square cursor-pointer;
@@ -187,11 +187,11 @@ body {
   }
 
   .mentor-section {
-    @apply border-2 border-orange-500 w-2/3 max-sm:w-full flex flex-col gap-4 justify-center items-center rounded-lg;
+    @apply w-2/3 max-sm:w-full flex flex-col gap-4 justify-center items-center rounded-lg;
   }
 
   .mentor-avatar {
-    @apply size-[300px] flex items-center justify-center rounded-lg max-sm:size-[100px] mt-4;
+    @apply size-[150px] flex items-center justify-center rounded-full max-sm:size-[100px] mt-4;
   }
   .mentor-lottie {
     @apply size-[300px] max-sm:size-[100px];
@@ -212,7 +212,7 @@ body {
     @apply relative flex flex-col gap-4 w-full items-center pt-10 flex-grow overflow-hidden;
   }
   .transcript-message {
-    @apply overflow-y-auto w-full flex flex-col gap-4 max-sm:gap-2 pr-2 h-full text-2xl;
+    @apply overflow-y-auto w-full flex flex-col gap-4 max-sm:gap-2 pr-2 h-full text-lg;
   }
   .transcript-fade {
     @apply pointer-events-none absolute bottom-0 left-0 right-0 h-40 max-sm:h-20 bg-gradient-to-t from-background via-background/90 to-transparent z-10;

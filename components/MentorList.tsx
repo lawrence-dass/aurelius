@@ -11,56 +11,50 @@ import {
 } from '@/components/ui/table'
 import Link from 'next/link'
 
-import { Mentor } from '@/types'
 import Image from 'next/image'
 import clock from '@/public/icons/clock.svg'
 
 
 interface MentorListProps {
-    mentors: Mentor[]
-    classNames?: string
+    list: any
 }
 
-const MentorList = ({ mentors, classNames }: MentorListProps) => {
-    
+const MentorList = ({list}: any) => {
+
   return (
-    <article className={cn('mentor-list', classNames)}>
-        <h2 className='font-bold text-3xl'> Recent Mentoring Sessions </h2>
+    <article className={cn('mentor-list')}>
+        <h2 className='font-bold text-3xl text-center mb-4'> Recent Mentoring Sessions </h2>
         <Table>
             <TableHeader>
                 <TableRow>
                     <TableHead className='text-xl font-bold'> Mentor </TableHead>
-                    <TableHead className='text-xl font-bold'> Focus </TableHead>
                     <TableHead className='text-xl font-bold'> Practice </TableHead>
-                    <TableHead className='text-xl font-bold'> Duration </TableHead>
+                    <TableHead className='text-xl font-bold text-center'> Duration </TableHead>
 
                 </TableRow>
             </TableHeader>
             <TableBody>
-                { mentors && mentors.length > 0 &&
-                    mentors.map((mentor) => (
-                        <TableRow key={mentor?.id}>
+                { list && list.length > 0 &&
+                    list.map((item: any) => (
+                        <TableRow key={`${item?.id}-${item?.created_at}`}>
                             <TableCell className='text-lg'>
-                                <Link href={`/mentors/${mentor?.id}`}>
-                                        <p className='text-lg font-bold'> {mentor?.name} </p>
+                                <Link href={`/mentors/${item?.id}`}>
                                     <div className='flex flex-col gap-2'>
-                                        <p className="font-bold text-2xl"> {mentor?.mentor} </p>
-                                        <p className="text-lg ">{mentor?.focus}
-                                        </p>
+                                        <p className="font-bold text-2xl"> {item?.mentor_name} </p>
                                     </div>
                                 </Link>
                             </TableCell>
                             <TableCell>
                                 <div className="text-gray-700 practice-badge w-fit">
-                                    {mentor?.practice}
+                                            {item?.mentor_practices.map((practice: string) => <span key={practice} className='text-md mr-2'>{practice}</span>)}
                                 </div>
                             </TableCell>
-                            <TableCell className='text-lg'> {mentor?.practice} </TableCell>
                             <TableCell>
                 
-                                <div className='flex items-center gap-1' >
-                                    <p className='text-lg'>{mentor?.duration}</p>
+                                <div className='flex items-center gap-1 justify-center' >
                                 <Image src={clock} alt='clock' width={20} height={20} />
+                                    <p className='text-lg'>{item?.user_call_usage} mins</p>
+                    
                                 </div>
                             </TableCell>
                         </TableRow>

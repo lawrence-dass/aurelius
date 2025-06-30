@@ -5,7 +5,7 @@ import {cn, configureAssistant,} from "@/lib/utils";
 import {vapi} from "@/lib/vapi.sdk";
 import Image from "next/image";
 import Lottie, {LottieRefCurrentProps} from "lottie-react";
-import soundwaves from '@/constants/soundwaves.json'
+import soundwaves from '@/constants/sound.json'
 import {addToSessionHistory} from "@/lib/actions/mentor.actions";
 
 enum CallStatus {
@@ -17,11 +17,15 @@ enum CallStatus {
 
 interface MentorCompontentProps {
     mentorId: string;
-    practice: string;
-    focus: string;
+    secondary_virtues: string[];
+    practices: string[];
+    specialties: string[];
+    duration: number;
+    introduction: string;
+    primary_virtue: string;
     name: string;
-    userName: string;
-    userImage: string;
+    userName: string | null;
+    userImage: string | null;
     style: string;
     voice: string;
 }
@@ -34,13 +38,46 @@ interface Message {
     transcript?: string;
 }
 
-const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, voice }: MentorCompontentProps) => {
+const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties, introduction, primary_virtue, name, userName, userImage, style, voice }: MentorCompontentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
-
+    const [timeRemaining, setTimeRemaining] = useState(60); // 1 minute default
+    const timerRef = useRef<NodeJS.Timeout | null>(null);
     const lottieRef = useRef<LottieRefCurrentProps>(null);
+    const elapsedTime = useRef(0);
+    const timeRemainingRef = useRef(timeRemaining);
+
+    // Timer effect
+    useEffect(() => {
+        if (callStatus === CallStatus.ACTIVE) {
+            if (timerRef.current) clearInterval(timerRef.current);
+            timerRef.current = setInterval(() => {
+                setTimeRemaining((prev) => {
+                    if (prev <= 1) {
+                        clearInterval(timerRef.current!);
+                        setCallStatus(CallStatus.FINISHED);
+                        vapi.stop();
+                        return 0;
+                    }
+                    return prev - 1;
+                });
+            }, 1000);
+        } else {
+            if (timerRef.current) clearInterval(timerRef.current);
+        }
+        return () => {
+            if (timerRef.current) clearInterval(timerRef.current);
+        };
+    }, [callStatus]);
+
+    // Reset timer when session starts
+    useEffect(() => {
+        if (callStatus === CallStatus.CONNECTING) {
+            setTimeRemaining(60);
+        }
+    }, [callStatus]);
 
     useEffect(() => {
         if(lottieRef) {
@@ -57,7 +94,8 @@ const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, vo
 
         const onCallEnd = () => {
             setCallStatus(CallStatus.FINISHED);
-            addToSessionHistory(mentorId)
+            elapsedTime.current = 60 - timeRemainingRef.current;
+            addToSessionHistory(mentorId, elapsedTime.current);
         }
 
         const onMessage = (message: Message) => {
@@ -87,7 +125,11 @@ const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, vo
             vapi.off('speech-start', onSpeechStart);
             vapi.off('speech-end', onSpeechEnd);
         }
-    }, []);
+    }, [mentorId]);
+
+    useEffect(() => {
+        timeRemainingRef.current = timeRemaining;
+    }, [timeRemaining]);
 
     const toggleMicrophone = () => {
         const isMuted = vapi.isMuted();
@@ -99,7 +141,7 @@ const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, vo
         setCallStatus(CallStatus.CONNECTING)
 
         const assistantOverrides = {
-            variableValues: { practice, focus, style },
+            variableValues: { secondary_virtues, practices, specialties, introduction, primary_virtue, name, style, voice },
             clientMessages: ["transcript"],
             serverMessages: [],
         }
@@ -114,44 +156,33 @@ const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, vo
     }
 
     return (
-        <section className="flex flex-col h-[70vh]">
-            <section className="flex gap-8 max-sm:flex-col">
+        <section className="flex flex-col">
+            <section className="flex flex-col gap-4 justify-center items-center">
                 <div className="mentor-section">
-                    <div className="mentor-avatar">
+                    <div className="mentor-avatar bg-gray-100">
                         <div
                             className={
                             cn(
                                 'absolute transition-opacity duration-1000', callStatus === CallStatus.FINISHED || callStatus === CallStatus.INACTIVE ? 'opacity-1001' : 'opacity-0', callStatus === CallStatus.CONNECTING && 'opacity-100 animate-pulse'
                             )
                         }>
-                            {/* <Image src={`/icons/${practice}.svg`} alt={practice} width={150} height={150} className="max-sm:w-fit" /> */}
                         </div>
-
                         <div className={cn('absolute transition-opacity duration-1000', callStatus === CallStatus.ACTIVE ? 'opacity-100': 'opacity-0')}>
                             <Lottie
                                 lottieRef={lottieRef}
                                 animationData={soundwaves}
                                 autoplay={false}
                                 className="mentor-lottie"
+                                style={{ width: 180, height: 180 }}
                             />
                         </div>
                     </div>
                     <p className="font-bold text-2xl">{name}</p>
+                    <div> Time Remaining: {timeRemaining} seconds</div>
+
                 </div>
 
-                <div className="user-section">
-                    <div className="user-avatar">
-                        {/* <Image src={userImage} alt={userName} width={130} height={130} className="rounded-lg" /> */}
-                        <p className="font-bold text-2xl">
-                            {userName}
-                        </p>
-                    </div>
-                    <button className="btn-mic" onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE}>
-                        <Image src={isMuted ? '/icons/mic-off.svg' : '/icons/mic-on.svg'} alt="mic" width={36} height={36} />
-                        <p className="max-sm:hidden">
-                            {isMuted ? 'Turn on microphone' : 'Turn off microphone'}
-                        </p>
-                    </button>
+                <div className="flex gap-4 justify-center items-center w-70">
                     <button className={cn('rounded-lg py-2 cursor-pointer transition-colors w-full text-white', callStatus ===CallStatus.ACTIVE ? 'bg-red-700' : 'bg-primary', callStatus === CallStatus.CONNECTING && 'animate-pulse')} onClick={callStatus === CallStatus.ACTIVE ? handleDisconnect : handleCall}>
                         {callStatus === CallStatus.ACTIVE
                         ? "End Session"
@@ -160,7 +191,19 @@ const MentorCompontent = ({ mentorId, practice, focus, name, userName, style, vo
                         : 'Start Session'
                         }
                     </button>
+                    <button className="flex flex-col items-center py-8 max-sm:py-2 cursor-pointer w-full" onClick={toggleMicrophone} disabled={callStatus !== CallStatus.ACTIVE}>
+                        <Image src={isMuted ? '/icons/mic-off.svg' : '/icons/mic-on.svg'} alt="mic" width={24} height={24} />
+                        <p className="max-sm:hidden text-xs">
+                            {isMuted ? 'Turn on microphone' : 'Turn off microphone'}
+                        </p>
+                    </button>
                 </div>
+                <div className="flex flex-col gap-4 justify-center items-center">
+                        <Image src={userImage} alt={userName} width={50} height={50} className="rounded-lg" />
+                        <p className="font-bold text-2xl">
+                            {userName}
+                        </p>
+                    </div>
             </section>
 
             <section className="transcript">

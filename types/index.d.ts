@@ -18,31 +18,44 @@ enum Practice {
   stoicLogic = "stoic-logic",
 }
 
+
 export type Mentor = Models.DocumentList<Models.Document> & {
   id: string;
   name: string;
-  practice: Practice;
-  focus: string;
+  title: string;
+  famous_quote: string;
+  qualities: string[];
+  primary_virtue: string;
+  secondary_virtues: string[];
   duration: number;
-  bookmarked: boolean;
-  virtue?: "wisdom" | "courage" | "justice" | "temperance";
+  practices: string[];
+  specialties: string[];  
+  mentor_type: "default" | "custom";
+  style: string;
+  voice: string;
+  introduction: string;
 };
 
 interface CreateMentor {
   name: string;
-  practice: string;
-  focus: string;
+  title: string;
+  famousQuote: string;
+  introduction: string;
+  primaryVirtue: string;
+  secondaryVirtues: string[];
+  practices: string[];
+  specialties: string[]; 
   voice: string;
-  style: string; // "wise" | "conversational" | "socratic" | "formal"
+  style: string;
   duration: number;
-  philosopher?: string;
+  mentorType: "default" | "custom";
 }
 
 interface GetMentors {
   limit?: number;
   page?: number;
-  practice?: string | string[];
-  focus?: string | string[];
+  practices?: string | string[];
+  name?: string | string[];
 }
 
 interface BuildClient {
@@ -81,7 +94,6 @@ interface SavedMessage {
 interface MentorComponentProps {
   mentorId: string;
   practice: string;
-  focus: string;
   name: string;
   userName: string;
   userImage: string;

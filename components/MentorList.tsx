@@ -17,7 +17,7 @@ import clock from '@/public/icons/clock.svg'
 
 
 
-interface MentorListProps {
+export interface MentorListProps {
     list: {
         id: string;
         created_at: string;
@@ -26,6 +26,7 @@ interface MentorListProps {
         user_call_usage: number;
     }[];
 }
+
 const MentorList = ({ list }: MentorListProps) => {
 
     return (

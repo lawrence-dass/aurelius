@@ -9,7 +9,7 @@ import { redirect } from "next/navigation";
 import {
   getUserMentors,
   getUserSessions,
-  getBookmarkedMentors,
+  // getBookmarkedMentors,
 } from "@/lib/actions/mentor.actions";
 import Image from "next/image";
 import MentorList from "@/components/MentorList";
@@ -21,7 +21,7 @@ const Profile = async () => {
 
   const mentors = await getUserMentors(user.id);
   const sessionHistory = await getUserSessions(user.id);
-  const bookmarkedMentors = await getBookmarkedMentors(user.id);
+  // const bookmarkedMentors = await getBookmarkedMentors(user.id);
 
   return (
     <main className="min-lg:w-3/4">
@@ -51,7 +51,7 @@ const Profile = async () => {
                 width={22}
                 height={22}
               />
-              <p className="text-2xl font-bold">{sessionHistory.length}</p>
+              <p className="text-2xl font-bold">{sessionHistory?.length}</p>
             </div>
             <div>Lessons completed</div>
           </div>
@@ -65,24 +65,22 @@ const Profile = async () => {
         </div>
       </section>
       <Accordion type="multiple">
-        <AccordionItem value="bookmarks">
+        {/* <AccordionItem value="bookmarks">
           <AccordionTrigger className="text-2xl font-bold">
             Bookmarked Mentors {`(${bookmarkedMentors.length})`}
           </AccordionTrigger>
           <AccordionContent>
             <MentorList
-                mentors={bookmarkedMentors}
+                list={bookmarkedMentors}
             />
           </AccordionContent>
-        </AccordionItem>
+        </AccordionItem> */}
         <AccordionItem value="recent">
           <AccordionTrigger className="text-2xl font-bold">
             Recent Sessions
           </AccordionTrigger>
           <AccordionContent>
-            <MentorList
-              mentors={sessionHistory}
-            />
+            <MentorList list={sessionHistory.flat()} />
           </AccordionContent>
         </AccordionItem>
         <AccordionItem value="mentors">
@@ -90,7 +88,7 @@ const Profile = async () => {
             My Mentors {`(${mentors.length})`}
           </AccordionTrigger>
           <AccordionContent>
-            <MentorList mentors={mentors} />
+            <MentorList list={mentors} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

@@ -89,26 +89,26 @@ export const getRecentSessions = async (userId: string, limit = 10) => {
         created_at: session.created_at,
         mentor_id: session.mentor_id,
         user_call_usage: session.user_call_usage,
-        mentor_name: session.mentors.name,
-        mentor_practices: session.mentors.practices,    
-        mentor_specialties: session.mentors.specialties
+        name: session.mentors.name,
+        practices: session.mentors.practices,    
+        specialties: session.mentors.specialties
     }));
     return sessionInfo;
 }
 
-export const getUserSessions = async (userId: string, limit = 10) => {
-    const supabase = createSupabaseClient();
-    const { data, error } = await supabase
-        .from('session_history')
-        .select(`mentors:mentor_id (*)`)
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(limit)
+// export const getUserSessions = async (userId: string, limit = 10) => {
+//     const supabase = createSupabaseClient();
+//     const { data, error } = await supabase
+//         .from('session_history')
+//         .select(`mentors:mentor_id (*)`)
+//         .eq('user_id', userId)
+//         .order('created_at', { ascending: false })
+//         .limit(limit)
 
-    if(error) throw new Error(error.message);
+//     if(error) throw new Error(error.message);
 
-    return data.map(({ mentors }) => mentors);
-}
+//     return data.map(({ mentors }) => mentors);
+// }
 
 export const getUserMentors = async (userId: string) => {
     const supabase = createSupabaseClient();

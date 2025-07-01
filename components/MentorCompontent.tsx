@@ -28,6 +28,7 @@ interface MentorCompontentProps {
     userImage: string | null;
     style: string;
     voice: string;
+    famous_quote: string;
 }
 
 interface Message {
@@ -38,7 +39,7 @@ interface Message {
     transcript?: string;
 }
 
-const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties, introduction, primary_virtue, name, userName, userImage, style, voice }: MentorCompontentProps) => {
+const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties, introduction, primary_virtue, name, userName, userImage, style, voice, famous_quote }: MentorCompontentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -143,7 +144,7 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
         setCallStatus(CallStatus.CONNECTING)
 
         const assistantOverrides = {
-            variableValues: { secondary_virtues, practices, specialties, introduction, primary_virtue, name, style, voice },
+            variableValues: { secondary_virtues, practices, specialties, introduction, primary_virtue, name, style, voice, famous_quote },
             clientMessages: ["transcript"],
             serverMessages: [],
         }

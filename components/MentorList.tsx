@@ -44,7 +44,7 @@ const MentorList = ({ list }: MentorListProps) => {
                 <TableBody>
                     {list && list.length > 0 &&
                         list.map((item: MentorListProps['list'][number]) => (
-                            <TableRow key={`${item?.id}-${item?.mentor_id}-${item?.created_at}`}>
+                            <TableRow key={`${item?.id}`}>
                                 <TableCell className='text-lg'>
                                     <Link href={`/mentors/${item?.id}`}>
                                         <div className='flex flex-col gap-2'>

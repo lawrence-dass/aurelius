@@ -75,7 +75,7 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
     // Reset timer when session starts
     useEffect(() => {
         if (callStatus === CallStatus.CONNECTING) {
-            setTimeRemaining(60);
+            setTimeRemaining(180);
         }
     }, [callStatus]);
 
@@ -94,7 +94,7 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
 
         const onCallEnd = () => {
             setCallStatus(CallStatus.FINISHED);
-            elapsedTime.current = 60 - timeRemainingRef.current;
+            elapsedTime.current = 180 - timeRemainingRef.current;
             addToSessionHistory(mentorId, elapsedTime.current);
         }
 

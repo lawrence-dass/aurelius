@@ -21,17 +21,17 @@ export interface MentorListProps {
     list: {
         id: string;
         created_at: string;
-        mentor_name: string;
-        mentor_practices: string[];
+        name: string;
+        practices: string[];
         user_call_usage: number;
     }[];
 }
 
 const MentorList = ({ list }: MentorListProps) => {
-
+    console.log('list 1111', list[0])
     return (
         <article className={cn('mentor-list')}>
-            <h2 className='font-bold text-3xl text-center mb-4'> Recent Mentoring Sessions </h2>
+            <h2 className='font-bold text-3xl text-center mb-4'> Recent Mentoring Sessions {`(${list.length})`} </h2>
             <Table>
                 <TableHeader>
                     <TableRow>
@@ -44,17 +44,17 @@ const MentorList = ({ list }: MentorListProps) => {
                 <TableBody>
                     {list && list.length > 0 &&
                         list.map((item: MentorListProps['list'][number]) => (
-                            <TableRow key={`${item?.id}-${item?.created_at}`}>
+                            <TableRow key={`${item?.id}-${item?.mentor_id}-${item?.created_at}`}>
                                 <TableCell className='text-lg'>
                                     <Link href={`/mentors/${item?.id}`}>
                                         <div className='flex flex-col gap-2'>
-                                            <p className="font-bold text-2xl"> {item?.mentor_name} </p>
+                                            <p className="font-bold text-2xl"> {item?.name} </p>
                                         </div>
                                     </Link>
                                 </TableCell>
                                 <TableCell>
                                     <div className="text-gray-700 practice-badge w-fit">
-                                        {item?.mentor_practices.map((practice: string) => <span key={practice} className='text-md mr-2'>{practice}</span>)}
+                                        {item?.practices?.map((practice: string) => <span key={practice} className='text-md mr-2'>{practice}</span>)}
                                     </div>
                                 </TableCell>
                                 <TableCell>

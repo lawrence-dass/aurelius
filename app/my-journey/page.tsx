@@ -8,7 +8,7 @@ import { currentUser } from "@clerk/nextjs/server";
 import { redirect } from "next/navigation";
 import {
   getUserMentors,
-  getUserSessions,
+  getRecentSessions,
 } from "@/lib/actions/mentor.actions";
 import Image from "next/image";
 import MentorList from "@/components/MentorList";
@@ -19,7 +19,7 @@ const Profile = async () => {
   if (!user) redirect("/sign-in");
 
   const mentors = await getUserMentors(user.id);
-  const sessionHistory = await getUserSessions(user.id);
+  const sessionHistory = await getRecentSessions(user.id);
 
   return (
     <main className="min-lg:w-3/4">

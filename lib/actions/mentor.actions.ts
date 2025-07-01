@@ -22,14 +22,14 @@ export const createMentor = async (formData: CreateMentor) => {
 
 export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetMentors) => {
     const supabase = createSupabaseClient();
-
+    console.log('practices 1111', practices)
     let query = supabase.from('mentors').select().filter('mentor_type', 'eq', 'default');
 
     if(practices && name) {
-        query = query.ilike('practices', `%${practices}%`)
+        query = query.contains('practices', [practices])
             .or(`name.ilike.%${name}%`)
-    } else if(practices) {
-        query = query.ilike('practices', `%${practices}%`)
+    } else if(practices && practices !== "" && practices !== "all" && practices !== "undefined" && practices !== null) {
+        query = query.contains('practices', [practices])
     } else if(name) {
         query = query.or(`name.ilike.%${name}%`)
     }
@@ -125,28 +125,12 @@ export const getUserMentors = async (userId: string) => {
 
 export const newMentorPermissions = async () => {
     const { has  } = await auth();
-    // const supabase = createSupabaseClient();
+    // two plan for now, basic and pro
 
     if(has({ plan: 'pro' })) {
         return true;
     }
     return false;
-
-    // // removed multi level subscription
-    // const { data, error } = await supabase
-    //     .from('mentors')
-    //     .select('id', { count: 'exact' })
-    //     .eq('author', userId)
-
-    // if(error) throw new Error(error.message);
-
-    // const mentorCount = data?.length;
-
-    // if(mentorCount >= limit) {
-    //     return false
-    // } else {
-    //     return true;
-    // }
 }
 
 // Bookmarks

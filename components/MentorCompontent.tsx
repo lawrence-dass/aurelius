@@ -43,7 +43,7 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
     const [messages, setMessages] = useState<Message[]>([]);
-    const [timeRemaining, setTimeRemaining] = useState(60); // 1 minute default
+    const [timeRemaining, setTimeRemaining] = useState(180); // 3 minutes default
     const timerRef = useRef<NodeJS.Timeout | null>(null);
     const lottieRef = useRef<LottieRefCurrentProps>(null);
     const elapsedTime = useRef(0);
@@ -124,6 +124,8 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
             vapi.off('error', onError);
             vapi.off('speech-start', onSpeechStart);
             vapi.off('speech-end', onSpeechEnd);
+            // Disconnect the call on unmount or URL change
+            vapi.stop();
         }
     }, [mentorId]);
 
@@ -199,9 +201,9 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
                     </button>
                 </div>
                 <div className="flex flex-col gap-4 justify-center items-center">
-                        <Image src={userImage} alt={userName} width={50} height={50} className="rounded-lg" />
+                        <Image src={userImage || "/default-user.png"} alt={userName || "User"} width={50} height={50} className="rounded-lg" />
                         <p className="font-bold text-2xl">
-                            {userName}
+                            {userName || "User"}
                         </p>
                     </div>
             </section>

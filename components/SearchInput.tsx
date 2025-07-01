@@ -17,7 +17,7 @@ const SearchInput = () => {
 
   useEffect(() => {
     const delayInputTimeout = setTimeout(() => {
-      if(search) {
+      if (search) {
         const newUrl = formUrlQuery({
           params: searchParams.toString(),
           key: 'name',
@@ -26,7 +26,7 @@ const SearchInput = () => {
         router.push(newUrl, { scroll: false });
       }
       else {
-        if(pathname.includes('mentors')) {
+        if (pathname.includes('mentors')) {
           const newUrl = removeKeysFromUrlQuery({
             params: searchParams.toString(),
             keysToRemove: ['name'],

@@ -32,7 +32,7 @@ const formSchema = z.object({
     }).max(200, {
         message: "Famous Quote must be less than 200 characters"
     }),
-        introduction: z.string().min(1, {
+    introduction: z.string().min(1, {
         message: "Introduction is required"
     }).max(1000, {
         message: "Introduction must be less than 1000 characters"
@@ -100,7 +100,7 @@ const MentorForm = () => {
             ...values,
             mentorType: "custom" as "custom" | "default"
         }
-        
+
         const mentor = await createMentor(newValues);
         if (mentor?.id) {
             redirect(`/mentors/${mentor.id}`);
@@ -129,7 +129,7 @@ const MentorForm = () => {
                         <FormItem>
                             <FormLabel>Title</FormLabel>
                             <FormControl>
-                                <Input {...field} placeholder='Enter Title' className='input' /> 
+                                <Input {...field} placeholder='Enter Title' className='input' />
                             </FormControl>
                         </FormItem>
                     )}
@@ -148,7 +148,7 @@ const MentorForm = () => {
                 />
                 <FormField
                     control={form.control}
-                        name="introduction"
+                    name="introduction"
                     render={({ field }) => (
                         <FormItem>
                             <FormLabel>Introduction</FormLabel>
@@ -189,13 +189,13 @@ const MentorForm = () => {
                             <FormLabel>Secondary Virtues</FormLabel>
                             <FormControl>
                                 <FancyMultiSelect
-                                        placeholder='Select Secondary Virtues'
-                                        selected={field.value}
-                                        setSelected={field.onChange}
-                                        selectables={Object.keys(virtues).map((virtue: string) => ({
-                                            label: virtues[virtue as keyof typeof virtues] as string,
-                                            value: virtue
-                                        }))}
+                                    placeholder='Select Secondary Virtues'
+                                    selected={field.value}
+                                    setSelected={field.onChange}
+                                    selectables={Object.keys(virtues).map((virtue: string) => ({
+                                        label: virtues[virtue as keyof typeof virtues] as string,
+                                        value: virtue
+                                    }))}
                                 />
                             </FormControl>
                         </FormItem>
@@ -212,7 +212,7 @@ const MentorForm = () => {
                                     placeholder='Select Practices'
                                     selected={field.value}
                                     setSelected={field.onChange}
-                                    selectables={Object.keys(practices).map((practice: string) => ({        
+                                    selectables={Object.keys(practices).map((practice: string) => ({
                                         label: practices[practice as keyof typeof practices] as string,
                                         value: practice
                                     }))}

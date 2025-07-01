@@ -11,7 +11,7 @@ import { currentUser } from '@clerk/nextjs/server'
 
 
 const Page = async () => {
-  const mentors = await getMentors({ limit: 3});
+  const mentors = await getMentors({ limit: 3 });
   const user = await currentUser();
   if (!user) redirect('/sign-in')
   const recentSessions = await getRecentSessions(user.id as string);
@@ -29,7 +29,7 @@ const Page = async () => {
         <Link href="/mentors/new">Create a New Mentor</Link>
       </Button>
       <section>
-        {recentSessions.length > 0 && <MentorList list={recentSessions}  />}
+        {recentSessions.length > 0 && <MentorList list={recentSessions} />}
       </section>
     </main>
   )

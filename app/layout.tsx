@@ -22,11 +22,11 @@ export default function RootLayout({
   children: React.ReactNode;
 }>) {
   return (
-  
-      <html lang="en">
-        <body className={`${crimson.variable} antialiased`}>
+
+    <html lang="en">
+      <body className={`${crimson.variable} antialiased`}>
         <ClerkProvider>
-            <Navbar />
+          <Navbar />
           {children}
         </ClerkProvider>
       </body>

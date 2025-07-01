@@ -22,7 +22,6 @@ export const createMentor = async (formData: CreateMentor) => {
 
 export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetMentors) => {
     const supabase = createSupabaseClient();
-    console.log('practices 1111', practices)
     let query = supabase.from('mentors').select().filter('mentor_type', 'eq', 'default');
 
     if(practices && name) {

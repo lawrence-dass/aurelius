@@ -1,181 +1,170 @@
 'use server';
 
-import {auth} from "@clerk/nextjs/server";
-import {createSupabaseClient} from "@/lib/supabase";
+import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
-import { CreateMentor, GetMentors } from "@/types";
+import { cookies } from "next/headers";
+import sql from "@/lib/db";
+import { CreateMentor, GetMentors, Mentor } from "@/types";
+
+export type SessionRecord = {
+    id: string;
+    created_at: string;
+    mentor_id: string;
+    user_call_usage: number;
+    name: string;
+    practices: string[];
+    specialties: string[];
+};
 
 
 export const createMentor = async (formData: CreateMentor) => {
     const { userId: author } = await auth();
-    const supabase = createSupabaseClient();
 
-    const { data, error } = await supabase
-        .from('mentors')
-        .insert({...formData, author })
-        .select();
+    const rows = await sql`
+        INSERT INTO mentors
+            (name, title, famous_quote, introduction, primary_virtue, secondary_virtues,
+             practices, specialties, voice, style, duration, mentor_type, author)
+        VALUES
+            (${formData.name}, ${formData.title}, ${formData.famousQuote},
+             ${formData.introduction}, ${formData.primaryVirtue}, ${formData.secondaryVirtues},
+             ${formData.practices}, ${formData.specialties}, ${formData.voice},
+             ${formData.style}, ${formData.duration}, ${formData.mentorType}, ${author})
+        RETURNING *
+    `;
 
-    if(error || !data) throw new Error(error?.message || 'Failed to create a mentor');
-
-    return data[0];
+    if (!rows[0]) throw new Error('Failed to create a mentor');
+    return rows[0] as Mentor;
 }
 
 export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetMentors) => {
-    const supabase = createSupabaseClient();
-    let query = supabase.from('mentors').select().filter('mentor_type', 'eq', 'default');
+    const offset = (page - 1) * limit;
+    const practiceValue = practices && practices !== "" && practices !== "all" && practices !== "undefined" ? practices as string : null;
+    const nameValue = name ? `%${name}%` : null;
 
-    if(practices && name) {
-        query = query.contains('practices', [practices])
-            .or(`name.ilike.%${name}%`)
-    } else if(practices && practices !== "" && practices !== "all" && practices !== "undefined" && practices !== null) {
-        query = query.contains('practices', [practices])
-    } else if(name) {
-        query = query.or(`name.ilike.%${name}%`)
+    let rows;
+
+    if (practiceValue && nameValue) {
+        rows = await sql`
+            SELECT * FROM mentors
+            WHERE mentor_type = 'default'
+              AND practices @> ARRAY[${practiceValue}]
+              AND name ILIKE ${nameValue}
+            LIMIT ${limit} OFFSET ${offset}
+        `;
+    } else if (practiceValue) {
+        rows = await sql`
+            SELECT * FROM mentors
+            WHERE mentor_type = 'default'
+              AND practices @> ARRAY[${practiceValue}]
+            LIMIT ${limit} OFFSET ${offset}
+        `;
+    } else if (nameValue) {
+        rows = await sql`
+            SELECT * FROM mentors
+            WHERE mentor_type = 'default'
+              AND name ILIKE ${nameValue}
+            LIMIT ${limit} OFFSET ${offset}
+        `;
+    } else {
+        rows = await sql`
+            SELECT * FROM mentors
+            WHERE mentor_type = 'default'
+            LIMIT ${limit} OFFSET ${offset}
+        `;
     }
 
-    query = query.range((page - 1) * limit, page * limit - 1);
-
-    const { data: mentors, error } = await query;
-
-    if(error) throw new Error(error.message);
-
-    return mentors;
+    return rows as Mentor[];
 }
 
 export const getMentor = async (id: string) => {
-    const supabase = createSupabaseClient();
-
-    const { data, error } = await supabase
-        .from('mentors')
-        .select()
-        .eq('id', id);
-
-    if(error) return console.log(error);
-
-    return data[0];
+    const rows = await sql`SELECT * FROM mentors WHERE id = ${id}`;
+    return (rows[0] ?? null) as Mentor | null;
 }
 
 export const addToSessionHistory = async (mentorId: string, lapsedTime: number) => {
     const { userId } = await auth();
-    const supabase = createSupabaseClient();
 
-    const { data, error } = await supabase.from('session_history')
-        .insert({
-            mentor_id: mentorId,
-            user_id: userId,
-            user_call_usage: lapsedTime,
-        })
-
-    if(error) throw new Error(error.message);
-
-    return data;
+    await sql`
+        INSERT INTO session_history (mentor_id, user_id, user_call_usage)
+        VALUES (${mentorId}, ${userId}, ${lapsedTime})
+    `;
 }
 
 export const getRecentSessions = async (userId: string, limit = 10) => {
-    const supabase = createSupabaseClient();
-    const { data, error } = await supabase
-        .from('session_history')
-        .select(`
-            *,
-            mentors:mentor_id (*)
-        `)
-        .eq('user_id', userId)
-        .order('created_at', { ascending: false })
-        .limit(limit)
-
-    if(error) throw new Error(error.message);
-    const sessionInfo = data.map((session) => ({
-        id: session.id,
-        created_at: session.created_at,
-        mentor_id: session.mentor_id,
-        user_call_usage: session.user_call_usage,
-        name: session.mentors.name,
-        practices: session.mentors.practices,    
-        specialties: session.mentors.specialties
-    }));
-    return sessionInfo;
+    const rows = await sql`
+        SELECT
+            sh.id,
+            sh.created_at,
+            sh.mentor_id,
+            sh.user_call_usage,
+            m.name,
+            m.practices,
+            m.specialties
+        FROM session_history sh
+        JOIN mentors m ON sh.mentor_id = m.id
+        WHERE sh.user_id = ${userId}
+        ORDER BY sh.created_at DESC
+        LIMIT ${limit}
+    `;
+    return rows as SessionRecord[];
 }
 
-// export const getUserSessions = async (userId: string, limit = 10) => {
-//     const supabase = createSupabaseClient();
-//     const { data, error } = await supabase
-//         .from('session_history')
-//         .select(`mentors:mentor_id (*)`)
-//         .eq('user_id', userId)
-//         .order('created_at', { ascending: false })
-//         .limit(limit)
-
-//     if(error) throw new Error(error.message);
-
-//     return data.map(({ mentors }) => mentors);
-// }
-
 export const getUserMentors = async (userId: string) => {
-    const supabase = createSupabaseClient();
-    const { data, error } = await supabase
-        .from('mentors')
-        .select()
-        .eq('author', userId)
-
-    if(error) throw new Error(error.message);
-
-    return data;
+    const rows = await sql`SELECT * FROM mentors WHERE author = ${userId}`;
+    return rows as Mentor[];
 }
 
 export const newMentorPermissions = async () => {
-    const { has  } = await auth();
-    // two plan for now, basic and pro
-
-    if(has({ plan: 'pro' })) {
+    const { has } = await auth();
+    if (has({ plan: 'pro' })) {
         return true;
     }
     return false;
 }
 
+export const incrementGuestSession = async () => {
+    const cookieStore = await cookies()
+    const current = parseInt(cookieStore.get('guest_sessions')?.value ?? '0')
+    const next = current + 1
+    cookieStore.set('guest_sessions', String(next), {
+        maxAge: 60 * 60 * 24 * 30,
+        path: '/',
+    })
+    return next
+}
+
 // Bookmarks
 export const addBookmark = async (mentorId: string, path: string) => {
-  const { userId } = await auth();
-  if (!userId) return;
-  const supabase = createSupabaseClient();
-  const { data, error } = await supabase.from("bookmarks").insert({
-    mentor_id: mentorId,
-    user_id: userId,
-  });
-  if (error) {
-    throw new Error(error.message);
-  }
-  // Revalidate the path to force a re-render of the page
+    const { userId } = await auth();
+    if (!userId) return;
 
-  revalidatePath(path);
-  return data;
+    await sql`
+        INSERT INTO bookmarks (mentor_id, user_id)
+        VALUES (${mentorId}, ${userId})
+        ON CONFLICT (mentor_id, user_id) DO NOTHING
+    `;
+
+    revalidatePath(path);
 };
 
 export const removeBookmark = async (mentorId: string, path: string) => {
-  const { userId } = await auth();
-  if (!userId) return;
-  const supabase = createSupabaseClient();
-  const { data, error } = await supabase
-    .from("bookmarks")
-    .delete()
-    .eq("mentor_id", mentorId)
-    .eq("user_id", userId);
-  if (error) {
-    throw new Error(error.message);
-  }
-  revalidatePath(path);
-  return data;
+    const { userId } = await auth();
+    if (!userId) return;
+
+    await sql`
+        DELETE FROM bookmarks
+        WHERE mentor_id = ${mentorId} AND user_id = ${userId}
+    `;
+
+    revalidatePath(path);
 };
 
-// It's almost the same as getUserMentors, but it's for the bookmarked mentors
 export const getBookmarkedMentors = async (userId: string) => {
-  const supabase = createSupabaseClient();
-  const { data, error } = await supabase
-    .from("bookmarks")
-    .select(`mentors:mentor_id (*)`) // Notice the (*) to get all the mentor data
-    .eq("user_id", userId);
-  if (error) {
-    throw new Error(error.message);
-  }
-  // We don't need the bookmarks data, so we return only the mentors
-  return data.map(({ mentors }) => mentors);
+    const rows = await sql`
+        SELECT m.*
+        FROM bookmarks b
+        JOIN mentors m ON b.mentor_id = m.id
+        WHERE b.user_id = ${userId}
+    `;
+    return rows as Mentor[];
 };

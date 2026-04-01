@@ -76,7 +76,7 @@ const Profile = async () => {
             My Mentors {`(${mentors.length})`}
           </AccordionTrigger>
           <AccordionContent>
-            <MentorList list={mentors} />
+            <MentorList list={mentors as unknown as Parameters<typeof MentorList>[0]['list']} />
           </AccordionContent>
         </AccordionItem>
       </Accordion>

@@ -6,7 +6,8 @@ import { vapi } from "@/lib/vapi.sdk";
 import Image from "next/image";
 import Lottie, { LottieRefCurrentProps } from "lottie-react";
 import soundwaves from '@/constants/sound.json'
-import { addToSessionHistory } from "@/lib/actions/mentor.actions";
+import { addToSessionHistory, incrementGuestSession } from "@/lib/actions/mentor.actions";
+import Link from "next/link";
 
 enum CallStatus {
     INACTIVE = 'INACTIVE',
@@ -26,6 +27,7 @@ interface MentorCompontentProps {
     name: string;
     userName: string | null;
     userImage: string | null;
+    isGuest?: boolean;
     style: string;
     voice: string;
     famous_quote: string;
@@ -39,7 +41,7 @@ interface Message {
     transcript?: string;
 }
 
-const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties, introduction, primary_virtue, name, userName, userImage, style, voice, famous_quote }: MentorCompontentProps) => {
+const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties, introduction, primary_virtue, name, userName, userImage, isGuest = false, style, voice, famous_quote }: MentorCompontentProps) => {
     const [callStatus, setCallStatus] = useState<CallStatus>(CallStatus.INACTIVE);
     const [isSpeaking, setIsSpeaking] = useState(false);
     const [isMuted, setIsMuted] = useState(false);
@@ -96,7 +98,11 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
         const onCallEnd = () => {
             setCallStatus(CallStatus.FINISHED);
             elapsedTime.current = 180 - timeRemainingRef.current;
-            addToSessionHistory(mentorId, elapsedTime.current);
+            if (isGuest) {
+                incrementGuestSession();
+            } else {
+                addToSessionHistory(mentorId, elapsedTime.current);
+            }
         }
 
         const onMessage = (message: Message) => {
@@ -208,6 +214,16 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
                     </p>
                 </div>
             </section>
+
+            {isGuest && callStatus === CallStatus.FINISHED && (
+                <div className="mt-4 p-4 rounded-lg border border-primary text-center">
+                    <p className="font-semibold text-lg">Enjoying your session?</p>
+                    <p className="text-gray-500 text-sm mt-1">Sign up to save your history and unlock unlimited sessions.</p>
+                    <Link href="/sign-in" className="mt-3 inline-block bg-primary text-white px-6 py-2 rounded-lg font-medium">
+                        Sign up free
+                    </Link>
+                </div>
+            )}
 
             <section className="transcript">
                 <div className="transcript-message no-scrollbar">

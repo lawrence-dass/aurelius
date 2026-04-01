@@ -19,7 +19,7 @@ enum Practice {
 }
 
 
-export type Mentor = Models.DocumentList<Models.Document> & {
+export type Mentor = {
   id: string;
   name: string;
   title: string;
@@ -29,11 +29,13 @@ export type Mentor = Models.DocumentList<Models.Document> & {
   secondary_virtues: string[];
   duration: number;
   practices: string[];
-  specialties: string[];  
+  specialties: string[];
   mentor_type: "default" | "custom";
   style: string;
   voice: string;
   introduction: string;
+  author?: string;
+  created_at?: string;
 };
 
 interface CreateMentor {

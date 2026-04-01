@@ -1,6 +1,7 @@
 import { getMentor } from '@/lib/actions/mentor.actions'
 import { currentUser } from '@clerk/nextjs/server'
 import { redirect } from 'next/navigation'
+import { cookies } from 'next/headers'
 import Image from 'next/image'
 import React from 'react'
 import MentorCompontent from '@/components/MentorCompontent'
@@ -12,13 +13,23 @@ interface MentorSessionPageProps {
   }>
 }
 
+const GUEST_SESSION_LIMIT = 3
 
 const page = async ({ params }: MentorSessionPageProps) => {
-  const {id} = await params  
+  const {id} = await params
   const mentor = await getMentor(id)
   const user = await currentUser();
-  if (!user) redirect('/sign-in')
+
   if (!mentor) redirect('/mentors')
+
+  if (!user) {
+    const cookieStore = await cookies()
+    const guestSessions = parseInt(cookieStore.get('guest_sessions')?.value ?? '0')
+    if (guestSessions >= GUEST_SESSION_LIMIT) {
+      redirect('/sign-in')
+    }
+  }
+
   return (
     <main>
       <article className='rounded-border p-6'>
@@ -33,7 +44,7 @@ const page = async ({ params }: MentorSessionPageProps) => {
             <p className='text-lg font-bold text-gray-500 text-center'>{mentor.duration} minutes </p>
           </div>
       </article>
-      <MentorCompontent mentorId={id} userName={user.firstName} userImage={user.imageUrl} {...mentor} />
+      <MentorCompontent mentorId={id} userName={user?.firstName ?? null} userImage={user?.imageUrl ?? null} isGuest={!user} {...mentor} />
     </main>
   )
 }

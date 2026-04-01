@@ -134,7 +134,7 @@ const MentorCompontent = ({ mentorId, secondary_virtues, practices, specialties,
             // Disconnect the call on unmount or URL change
             vapi.stop();
         }
-    }, [mentorId]);
+    }, [mentorId, isGuest]);
 
     useEffect(() => {
         timeRemainingRef.current = timeRemaining;

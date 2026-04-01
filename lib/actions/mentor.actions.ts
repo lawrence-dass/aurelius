@@ -3,7 +3,7 @@
 import { auth } from "@clerk/nextjs/server";
 import { revalidatePath } from "next/cache";
 import { cookies } from "next/headers";
-import sql from "@/lib/db";
+import getDb from "@/lib/db";
 import { CreateMentor, GetMentors, Mentor } from "@/types";
 
 export type SessionRecord = {
@@ -20,7 +20,7 @@ export type SessionRecord = {
 export const createMentor = async (formData: CreateMentor) => {
     const { userId: author } = await auth();
 
-    const rows = await sql`
+    const rows = await getDb()`
         INSERT INTO mentors
             (name, title, famous_quote, introduction, primary_virtue, secondary_virtues,
              practices, specialties, voice, style, duration, mentor_type, author)
@@ -44,7 +44,7 @@ export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetM
     let rows;
 
     if (practiceValue && nameValue) {
-        rows = await sql`
+        rows = await getDb()`
             SELECT * FROM mentors
             WHERE mentor_type = 'default'
               AND practices @> ARRAY[${practiceValue}]
@@ -52,21 +52,21 @@ export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetM
             LIMIT ${limit} OFFSET ${offset}
         `;
     } else if (practiceValue) {
-        rows = await sql`
+        rows = await getDb()`
             SELECT * FROM mentors
             WHERE mentor_type = 'default'
               AND practices @> ARRAY[${practiceValue}]
             LIMIT ${limit} OFFSET ${offset}
         `;
     } else if (nameValue) {
-        rows = await sql`
+        rows = await getDb()`
             SELECT * FROM mentors
             WHERE mentor_type = 'default'
               AND name ILIKE ${nameValue}
             LIMIT ${limit} OFFSET ${offset}
         `;
     } else {
-        rows = await sql`
+        rows = await getDb()`
             SELECT * FROM mentors
             WHERE mentor_type = 'default'
             LIMIT ${limit} OFFSET ${offset}
@@ -77,21 +77,21 @@ export const getMentors = async ({ limit = 10, page = 1, practices, name }: GetM
 }
 
 export const getMentor = async (id: string) => {
-    const rows = await sql`SELECT * FROM mentors WHERE id = ${id}`;
+    const rows = await getDb()`SELECT * FROM mentors WHERE id = ${id}`;
     return (rows[0] ?? null) as Mentor | null;
 }
 
 export const addToSessionHistory = async (mentorId: string, lapsedTime: number) => {
     const { userId } = await auth();
 
-    await sql`
+    await getDb()`
         INSERT INTO session_history (mentor_id, user_id, user_call_usage)
         VALUES (${mentorId}, ${userId}, ${lapsedTime})
     `;
 }
 
 export const getRecentSessions = async (userId: string, limit = 10) => {
-    const rows = await sql`
+    const rows = await getDb()`
         SELECT
             sh.id,
             sh.created_at,
@@ -110,7 +110,7 @@ export const getRecentSessions = async (userId: string, limit = 10) => {
 }
 
 export const getUserMentors = async (userId: string) => {
-    const rows = await sql`SELECT * FROM mentors WHERE author = ${userId}`;
+    const rows = await getDb()`SELECT * FROM mentors WHERE author = ${userId}`;
     return rows as Mentor[];
 }
 
@@ -138,7 +138,7 @@ export const addBookmark = async (mentorId: string, path: string) => {
     const { userId } = await auth();
     if (!userId) return;
 
-    await sql`
+    await getDb()`
         INSERT INTO bookmarks (mentor_id, user_id)
         VALUES (${mentorId}, ${userId})
         ON CONFLICT (mentor_id, user_id) DO NOTHING
@@ -151,7 +151,7 @@ export const removeBookmark = async (mentorId: string, path: string) => {
     const { userId } = await auth();
     if (!userId) return;
 
-    await sql`
+    await getDb()`
         DELETE FROM bookmarks
         WHERE mentor_id = ${mentorId} AND user_id = ${userId}
     `;
@@ -160,7 +160,7 @@ export const removeBookmark = async (mentorId: string, path: string) => {
 };
 
 export const getBookmarkedMentors = async (userId: string) => {
-    const rows = await sql`
+    const rows = await getDb()`
         SELECT m.*
         FROM bookmarks b
         JOIN mentors m ON b.mentor_id = m.id
